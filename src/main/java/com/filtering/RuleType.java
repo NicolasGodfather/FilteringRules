@@ -1,7 +1,7 @@
 package com.filtering;
 
 /**
- * Realization types of rule
+ * Realization types of Rule
  *
  * @author Nicolas Asinovich.
  */

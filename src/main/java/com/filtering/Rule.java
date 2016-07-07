@@ -5,7 +5,7 @@ package com.filtering;
  *
  * @author Nicolas Asinovich.
  */
-public class Rule {
+class Rule {
 
     private RuleType ruleType;
 
