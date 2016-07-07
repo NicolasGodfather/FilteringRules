@@ -1,11 +1,11 @@
-package com.filtering;
+package com.filtering.element;
 
 /**
- * Realization types of Rule
+ * Realization types of Rule, each type has it's own Precedence(number) that necessary in comparing
  *
  * @author Nicolas Asinovich.
  */
-enum RuleType {
+public enum RuleType {
     CHILD(1), SUB(2), ROOT(3);
 
     private final int ruleTypePrecedence;

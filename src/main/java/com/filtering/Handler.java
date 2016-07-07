@@ -1,17 +1,21 @@
 package com.filtering;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.HashMap;
-
 /**
- * Realization Handler
+ * Realization Handler event
  *
  * @author Nicolas Asinovich.
  */
-class Handler extends DefaultHandler {
+public class Handler extends DefaultHandler{
 
-    private HashMap<Integer, Rule> data = new HashMap<Integer, Rule>();
+    @Override
+    public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if (qName.equals("rule")) {
 
+        }
+    }
 
 }

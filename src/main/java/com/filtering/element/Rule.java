@@ -1,11 +1,11 @@
-package com.filtering;
+package com.filtering.element;
 
 /**
  * Realization Rule like entity
  *
  * @author Nicolas Asinovich.
  */
-class Rule {
+public class Rule {
 
     private RuleType ruleType;
 
