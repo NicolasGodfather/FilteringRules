@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class FilteringActionElementImpl implements ActionElement {
     /**
-     * The field will store our rules
+     * The HashMap will store our rules, where attribute of rule the name is unique.
      */
     private HashMap<String, Rule> dataRule = new HashMap<String, Rule>();
     private RuleType ruleType;
@@ -35,14 +35,9 @@ public class FilteringActionElementImpl implements ActionElement {
         this.ruleType = ruleType;
     }
 
-
+    @Override
     public void addRule (Attributes attributes) {
         dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt("weight")));
-    }
-
-    @Override
-    public void updateRule (Attributes attributes) {
-
     }
 
     @Override

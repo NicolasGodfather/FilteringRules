@@ -14,7 +14,7 @@ public interface ActionXML {
 
     /**
      * Write xml file
-     * @param addressFile
+     * @param parsedData
      */
-    void writeXML (String addressFile);
+    void writeXML (String parsedData);
 }

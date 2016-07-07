@@ -11,10 +11,12 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Handler extends DefaultHandler{
 
+    private FilteringActionElementImpl filtering = new FilteringActionElementImpl();
+
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
-
+            filtering.addRule(attributes);
         }
     }
 

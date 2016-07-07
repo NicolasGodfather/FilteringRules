@@ -15,12 +15,6 @@ public interface ActionElement {
     void addRule (Attributes attributes);
 
     /**
-     * Replace one element to other if his names the same, cause should be unique in output
-     * @param attributes
-     */
-    void updateRule (Attributes attributes);
-
-    /**
      *
      * @param attributes
      */
