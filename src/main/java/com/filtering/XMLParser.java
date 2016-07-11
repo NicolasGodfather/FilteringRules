@@ -9,7 +9,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
-import java.util.HashMap;
 
 /**
  * Realization XMLParser
@@ -23,7 +22,6 @@ public class XMLParser {
     private static final String CHARSET_NAME = "UTF-8";
     private static boolean append = true;
     private static int countName;
-    private static HashMap<String, FilteringHandler> parseData;
 
     /**
      * Read xml file
@@ -37,11 +35,21 @@ public class XMLParser {
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
             saxParser.parse(filePath, filteringHandler);
+
+            OutputStream outputStream = new FileOutputStream(exists(filePath), append);
+
+            XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
+                    new OutputStreamWriter(outputStream, CHARSET_NAME));
+            out.writeStartElement("rule");
+
+            outputStream.close();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
             e.printStackTrace();
         }
     }

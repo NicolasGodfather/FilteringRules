@@ -48,15 +48,42 @@ public class FilteringHandler extends DefaultHandler {
      * @param attributes
      */
     public void addRule (Attributes attributes) {
-        dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt("weight")));
+        dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
     }
 
     /**
-     *
+     * Replace by new Rule
      * @param attributes
      */
-    public void getRule (Attributes attributes) {
-
+    public void replaceRule (Attributes attributes) {
+        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
+                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
     }
 
+    /**
+     * Made logic filtering
+     * @param attributes
+     */
+    public void getFilteringRule (Attributes attributes) {
+        ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
+
+        /* If element hasn't key 'name', we will add it. */
+        if (!dataRule.containsKey(attributes.getValue("name"))) {
+            addRule(attributes);
+        } else {
+            /* If elements have some keys, we will compare them by type. */
+            if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
+                    .getRuleType().getRuleTypePrecedence()) {
+                replaceRule(attributes);
+            }
+            /* If elements have some types, we will compare them by weight. */
+            else if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
+                    .getRuleType().getRuleTypePrecedence()) {
+                if (Integer.parseInt(attributes.getValue("weight")) > dataRule.get(attributes.getValue("name"))
+                        .getWeight()) {
+                    replaceRule(attributes);
+                }
+            }
+        }
+    }
 }
