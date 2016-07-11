@@ -1,37 +1,42 @@
 package com.filtering;
 
-import com.filtering.actions.ActionXML;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
+import java.util.HashMap;
 
 /**
- * Realization SAXParserActionXMLImpl
- * cause app will use XML files more than 100MB
+ * Realization XMLParser
+ * Use SAXParser cause app will use XML files more than 100MB
  *
  * @author Nicolas Asinovich.
  */
-public class SAXParserActionXMLImpl implements ActionXML {
+public class XMLParser {
 
-    public static String filePath = "src/main/resources/output/output.xml";
-    public static final String CHARSET_NAME = "UTF-8";
-    public static boolean APPEND  = true;
-    public static int count;
+    private static String filePath = "src/main/resources/output/output.xml";
+    private static final String CHARSET_NAME = "UTF-8";
+    private static boolean append = true;
+    private static int countName;
+    private static HashMap<String, FilteringHandler> parseData;
 
-    @Override
-    public void readXML (String addressFile) {
+    /**
+     * Read xml file
+     * @param filePath
+     */
+    public void readXML (String filePath) {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 
-        Handler handler = new Handler();
+        FilteringHandler filteringHandler = new FilteringHandler();
 
         try {
-            javax.xml.parsers.SAXParser saxParser = saxParserFactory.newSAXParser();
-            saxParser.parse(addressFile, handler);
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(filePath, filteringHandler);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -41,10 +46,13 @@ public class SAXParserActionXMLImpl implements ActionXML {
         }
     }
 
-    @Override
+    /**
+     * Write xml file
+     * @param parsedData
+     */
     public void writeXML (String parsedData) {
         try {
-            OutputStream outputStream = new FileOutputStream(exists(filePath), APPEND);
+            OutputStream outputStream = new FileOutputStream(exists(filePath), append);
 
             XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
                     new OutputStreamWriter(outputStream, CHARSET_NAME));
@@ -64,11 +72,17 @@ public class SAXParserActionXMLImpl implements ActionXML {
         }
     }
 
+    /**
+     * check existing output file
+     * @param fileAddress
+     * @return
+     * @throws FileNotFoundException
+     */
     private static String exists(String fileAddress) throws FileNotFoundException {
         fileAddress = filePath;
         File file = new File(fileAddress);
         if (file.exists()){
-            filePath = "src/main/resources/output/output_" + count++ + ".txt";
+            filePath = "src/main/resources/output/output_" + countName++ + ".txt";
         }
         return filePath;
     }

@@ -8,8 +8,8 @@ package com.filtering;
 public class StartParse {
 
     public static void main (String[] args) {
-        SAXParserActionXMLImpl startParser = new SAXParserActionXMLImpl();
-        startParser.readXML("src/main/resources/input/rule.xml");
-//        startParser.writeXML();
+        XMLParser start = new XMLParser();
+        start.readXML("src/main/resources/input/rule.xml");
+//        start.writeXML();
     }
 }

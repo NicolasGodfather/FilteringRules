@@ -2,8 +2,9 @@ package com.filtering;
 
 import com.filtering.element.Rule;
 import com.filtering.element.RuleType;
-import com.filtering.actions.ActionElement;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
  *
  * @author Nicolas Asinovich.
  */
-public class FilteringActionElementImpl implements ActionElement {
+public class FilteringHandler extends DefaultHandler {
     /**
      * The HashMap will store our rules, where attribute of rule the name is unique.
      */
@@ -36,11 +37,24 @@ public class FilteringActionElementImpl implements ActionElement {
     }
 
     @Override
+    public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if (qName.equals("rule")) {
+            addRule(attributes);
+        }
+    }
+
+    /**
+     * Create new Rule element
+     * @param attributes
+     */
     public void addRule (Attributes attributes) {
         dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt("weight")));
     }
 
-    @Override
+    /**
+     *
+     * @param attributes
+     */
     public void getRule (Attributes attributes) {
 
     }
