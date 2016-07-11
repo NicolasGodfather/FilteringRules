@@ -18,16 +18,22 @@ import java.io.*;
  */
 public class XMLParser {
 
-    private static String filePath = "src/main/resources/output/output.xml";
+    private static String filePath = "src/main/resources/input/input.xml";
     private static final String CHARSET_NAME = "UTF-8";
     private static boolean append = true;
     private static int countName;
+//    private static HashMap<String, FilteringHandler> parseData;
+
+    public void parseXML() {
+        readXML(filePath);
+        writeXML();
+    }
 
     /**
      * Read xml file
      * @param filePath
      */
-    public void readXML (String filePath) {
+    private void readXML (String filePath) {
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 
         FilteringHandler filteringHandler = new FilteringHandler();
@@ -35,40 +41,29 @@ public class XMLParser {
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
             saxParser.parse(filePath, filteringHandler);
-
-            OutputStream outputStream = new FileOutputStream(exists(filePath), append);
-
-            XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
-                    new OutputStreamWriter(outputStream, CHARSET_NAME));
-            out.writeStartElement("rule");
-
-            outputStream.close();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
         }
     }
 
     /**
      * Write xml file
-     * @param parsedData
      */
-    public void writeXML (String parsedData) {
+    private void writeXML () {
         try {
             OutputStream outputStream = new FileOutputStream(exists(filePath), append);
 
             XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
                     new OutputStreamWriter(outputStream, CHARSET_NAME));
 
-            out.writeStartElement(parsedData);
+            out.writeStartElement("rule");
+            out.writeCharacters("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
 
             outputStream.close();
-            out.close();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
@@ -87,11 +82,10 @@ public class XMLParser {
      * @throws FileNotFoundException
      */
     private static String exists(String fileAddress) throws FileNotFoundException {
-        fileAddress = filePath;
         File file = new File(fileAddress);
         if (file.exists()){
-            filePath = "src/main/resources/output/output_" + countName++ + ".txt";
+            fileAddress = "src/main/resources/output/output_" + countName++ + ".xml";
         }
-        return filePath;
+        return fileAddress;
     }
 }
