@@ -16,18 +16,12 @@ import java.io.*;
  *
  * @author Nicolas Asinovich.
  */
-public class XMLParser {
+public class XMLParser implements Runnable{
 
     private static String filePath = "src/main/resources/input/input.xml";
     private static final String CHARSET_NAME = "UTF-8";
     private static boolean append = true;
     private static int countName;
-//    private static HashMap<String, FilteringHandler> parseData;
-
-    public void parseXML() {
-        readXML(filePath);
-        writeXML();
-    }
 
     /**
      * Read xml file
@@ -87,5 +81,11 @@ public class XMLParser {
             fileAddress = "src/main/resources/output/output_" + countName++ + ".xml";
         }
         return fileAddress;
+    }
+
+    @Override
+    public void run () {
+        readXML(filePath);
+        writeXML();
     }
 }
