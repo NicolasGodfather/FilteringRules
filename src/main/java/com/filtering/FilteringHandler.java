@@ -13,14 +13,14 @@ import java.util.HashMap;
  *
  * @author Nicolas Asinovich.
  */
-public class FilteringHandler extends DefaultHandler {
+class FilteringHandler extends DefaultHandler {
     /**
      * The HashMap will store our rules, where attribute of rule the name is unique.
      */
     private HashMap<String, Rule> dataRule = new HashMap<String, Rule>();
     private RuleType ruleType;
 
-    public HashMap<String, Rule> getDataRule () {
+    HashMap<String, Rule> getDataRule () {
         return dataRule;
     }
 
@@ -60,7 +60,8 @@ public class FilteringHandler extends DefaultHandler {
 //        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
 //                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
 
-//        dataRule.get(attributes.getValue("name")) = dataRule.get(attributes.getValue("name"));
+        //TODO: maybe this
+        dataRule.put(attributes.getValue("name"), dataRule.get(attributes.getValue("name")));
     }
 
     /**
@@ -77,14 +78,14 @@ public class FilteringHandler extends DefaultHandler {
             /* If elements have some keys, we will compare them by type. */
             if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
                     .getRuleType().getRuleTypePrecedence()) {
-                addRule(attributes);
+                replaceRule(attributes);
             }
             /* If elements have some types, we will compare them by weight. */
             else if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
                     .getRuleType().getRuleTypePrecedence()) {
                 if (Integer.parseInt(attributes.getValue("weight")) > dataRule.get(attributes.getValue("name"))
                         .getWeight()) {
-                    addRule(attributes);
+                    replaceRule(attributes);
                 }
             }
         }
