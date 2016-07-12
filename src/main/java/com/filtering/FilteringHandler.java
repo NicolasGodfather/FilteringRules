@@ -39,7 +39,7 @@ public class FilteringHandler extends DefaultHandler {
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
-            addRule(attributes);
+            getFilteringRule(attributes);
         }
     }
 
@@ -47,7 +47,7 @@ public class FilteringHandler extends DefaultHandler {
      * Create new Rule element
      * @param attributes
      */
-    public void addRule (Attributes attributes) {
+    private void addRule (Attributes attributes) {
         dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
     }
 
@@ -55,9 +55,12 @@ public class FilteringHandler extends DefaultHandler {
      * Replace by new Rule
      * @param attributes
      */
-    public void replaceRule (Attributes attributes) {
-        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
-                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
+    private void replaceRule (Attributes attributes) {
+        //TODO: here doesn't work this logic
+//        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
+//                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
+
+//        dataRule.get(attributes.getValue("name")) = dataRule.get(attributes.getValue("name"));
     }
 
     /**
@@ -74,14 +77,14 @@ public class FilteringHandler extends DefaultHandler {
             /* If elements have some keys, we will compare them by type. */
             if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
                     .getRuleType().getRuleTypePrecedence()) {
-                replaceRule(attributes);
+                addRule(attributes);
             }
             /* If elements have some types, we will compare them by weight. */
             else if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
                     .getRuleType().getRuleTypePrecedence()) {
                 if (Integer.parseInt(attributes.getValue("weight")) > dataRule.get(attributes.getValue("name"))
                         .getWeight()) {
-                    replaceRule(attributes);
+                    addRule(attributes);
                 }
             }
         }
