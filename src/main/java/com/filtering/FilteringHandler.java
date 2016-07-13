@@ -23,13 +23,14 @@ class FilteringHandler extends DefaultHandler {
     /**
      * The HashMap will store our rules, where attribute of rule the name is unique.
      */
-    private HashMap<String, Rule> dataRule;
-    private RuleType ruleType;
-    private FilteringHandler handler = new FilteringHandler();
+    private HashMap<String, Rule> dataRule = new HashMap<String, Rule>();
 
-    private HashMap<String, Rule> getDataRule () {
+    public HashMap<String, Rule> getDataRule () {
         return dataRule;
     }
+
+//    private ArrayList list = new ArrayList();
+    private RuleType ruleType;
 
     /**
      * Read xml file
@@ -40,7 +41,7 @@ class FilteringHandler extends DefaultHandler {
 
         try {
             SAXParser saxParser = saxParserFactory.newSAXParser();
-            saxParser.parse(filePath, handler);
+            saxParser.parse(filePath, this);
 
             writeXML();
         } catch (ParserConfigurationException e) {
@@ -61,8 +62,7 @@ class FilteringHandler extends DefaultHandler {
             OutputStream outputStream = new FileOutputStream((filePathOut), true);
             XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
                     new OutputStreamWriter(outputStream, "UTF-8"));
-//перенести в фильтр!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            dataRule = handler.getDataRule();
+            HashMap<String, Rule> dataRule = this.getDataRule();
 
             out.writeStartDocument("UTF-8", "1.0");
             out.writeStartElement("rules");
@@ -90,59 +90,12 @@ class FilteringHandler extends DefaultHandler {
             e.printStackTrace();
         }
     }
+
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
-            getFilteringRule(attributes);
-        }
-    }
-
-    /**
-     * Create new Rule element
-     * @param attributes
-     */
-    private void addRule (Attributes attributes) {
-        dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
-    }
-
-    /**
-     * Replace by new Rule
-     * @param attributes
-     */
-    private void replaceRule (Attributes attributes) {
-//        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
-//                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
-
-        dataRule.put(attributes.getValue("name"), dataRule.get(attributes.getValue("name")));
-    }
-
-    /**
-     * Made logic filtering
-     * @param attributes
-     */
-    // TODO: 13.07.2016 CHECK THIS
-    public void getFilteringRule (Attributes attributes) {
-        ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
-
-        /* If element hasn't key 'name', we will add it. */
-        if (!dataRule.containsKey(attributes.getValue("name"))) {
-            addRule(attributes);
-        }
-        else {
-            /* If elements have some types, we will compare them by weight. */
-            if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
-                    .getRuleType().getRuleTypePrecedence()) {
-                if (Integer.parseInt(attributes.getValue("weight")) > dataRule.get(attributes.getValue("name"))
-                        .getWeight()) {
-                    replaceRule(attributes);
-
-                }
-            }
-            else if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
-                    .getRuleType().getRuleTypePrecedence()){
-            /* If elements have some keys, we will compare them by type. */
-                    replaceRule(attributes);
-            }
+            ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
+            dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
         }
     }
 }

@@ -35,23 +35,4 @@ public class Rule {
             throw new IllegalArgumentException("The weight should be a positive integer!");
         }
     }
-
-    @Override
-    public int hashCode () {
-        return getWeight() * getRuleType().hashCode();
-    }
-
-    @Override
-    public boolean equals (Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Rule rule = (Rule) obj;
-        return !(this.getRuleType() != rule.getRuleType() &&
-                this.getWeight() != rule.getWeight());
-    }
-
-    @Override
-    public String toString () {
-        return ruleType + " " + weight;
-    }
 }
