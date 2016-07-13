@@ -1,7 +1,5 @@
 package com.filtering;
 
-import com.filtering.element.Rule;
-import com.filtering.element.RuleType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -24,18 +22,6 @@ class FilteringHandler extends DefaultHandler {
         return dataRule;
     }
 
-    public void setDataRule (HashMap<String, Rule> dataRule) {
-        this.dataRule = dataRule;
-    }
-
-    public RuleType getRuleType () {
-        return ruleType;
-    }
-
-    public void setRuleType (RuleType ruleType) {
-        this.ruleType = ruleType;
-    }
-
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
@@ -56,11 +42,9 @@ class FilteringHandler extends DefaultHandler {
      * @param attributes
      */
     private void replaceRule (Attributes attributes) {
-        //TODO: here doesn't work this logic
 //        dataRule.get(attributes.getValue("name").replace(attributes.getValue("name"),
 //                (CharSequence) new Rule(ruleType, Integer.parseInt(attributes.getValue("weight")))));
 
-        //TODO: maybe this
         dataRule.put(attributes.getValue("name"), dataRule.get(attributes.getValue("name")));
     }
 
@@ -68,25 +52,28 @@ class FilteringHandler extends DefaultHandler {
      * Made logic filtering
      * @param attributes
      */
+    // TODO: 13.07.2016 CHECK THIS
     public void getFilteringRule (Attributes attributes) {
         ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
 
         /* If element hasn't key 'name', we will add it. */
         if (!dataRule.containsKey(attributes.getValue("name"))) {
             addRule(attributes);
-        } else {
-            /* If elements have some keys, we will compare them by type. */
-            if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
-                    .getRuleType().getRuleTypePrecedence()) {
-                replaceRule(attributes);
-            }
+        }
+        else {
             /* If elements have some types, we will compare them by weight. */
-            else if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
+            if (ruleType.getRuleTypePrecedence() == dataRule.get(attributes.getValue("name"))
                     .getRuleType().getRuleTypePrecedence()) {
                 if (Integer.parseInt(attributes.getValue("weight")) > dataRule.get(attributes.getValue("name"))
                         .getWeight()) {
                     replaceRule(attributes);
+
                 }
+            }
+            else if (ruleType.getRuleTypePrecedence() < dataRule.get(attributes.getValue("name"))
+                    .getRuleType().getRuleTypePrecedence()){
+            /* If elements have some keys, we will compare them by type. */
+                    replaceRule(attributes);
             }
         }
     }

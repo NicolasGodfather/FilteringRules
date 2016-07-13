@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<rules>
-    <rule>
-        <d ROOT 45><b SUB 56><c CHILD 99><a CHILD 17>Document Title</a CHILD 17></c CHILD 99></b SUB 56></d ROOT 45>
-        </rule>
-        </rules>

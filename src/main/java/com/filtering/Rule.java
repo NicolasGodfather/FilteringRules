@@ -1,4 +1,4 @@
-package com.filtering.element;
+package com.filtering;
 
 /**
  * Realization Rule like entity

@@ -9,6 +9,6 @@ public class StartApp {
 
     public static void main (String[] args) {
         XMLParser start = new XMLParser();
-        start.run();
+        start.parseXML("src/main/resources/input.xml");
     }
 }

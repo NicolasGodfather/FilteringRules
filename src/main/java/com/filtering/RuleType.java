@@ -1,4 +1,4 @@
-package com.filtering.element;
+package com.filtering;
 
 /**
  * Realization types of Rule, each type has it's own Precedence(number) that necessary in comparing
