@@ -63,22 +63,18 @@ class FilteringHandler extends DefaultHandler {
                     new OutputStreamWriter(outputStream, "UTF-8"));
 //перенести в фильтр!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             dataRule = handler.getDataRule();
-// TODO: maybe here is mistake
-            out.writeStartDocument();
+
+            out.writeStartDocument("UTF-8", "1.0");
             out.writeStartElement("rules");
 
-//            for (Map.Entry<String, Rule> entry : dataRule.entrySet()) {
-//                out.writeStartElement("rules");
-//                out.writeStartElement(entry.getKey() + " " + entry.getValue());
-//                out.writeEndElement();
-//                out.writeEndElement();
-//            }
             for (String s : dataRule.keySet()) {
-                out.writeStartElement("rules");
-                out.writeStartElement(dataRule.get(s).toString());
-                out.writeEndElement();
+                out.writeStartElement("rule");
+                out.writeAttribute("name", s);
+                out.writeAttribute("type", dataRule.get(s).getRuleType().toString().toLowerCase());
+                out.writeAttribute("weight", String.valueOf(dataRule.get(s).getWeight()));
                 out.writeEndElement();
             }
+
             out.writeEndElement();
             out.writeEndDocument();
 
