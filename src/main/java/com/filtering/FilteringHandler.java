@@ -11,7 +11,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Realization filtering
@@ -23,13 +23,26 @@ class FilteringHandler extends DefaultHandler {
     /**
      * The HashMap will store our rules, where attribute of rule the name is unique.
      */
-    private HashMap<String, Rule> dataRule = new HashMap<String, Rule>();
 
-    public HashMap<String, Rule> getDataRule () {
-        return dataRule;
+    private ArrayList<Rule> list = new ArrayList();
+    private String name;
+
+    public String getName () {
+        return name;
     }
 
-//    private ArrayList list = new ArrayList();
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Rule> getList () {
+        return list;
+    }
+
+    public void setList (ArrayList<Rule> list) {
+        this.list = list;
+    }
+
     private RuleType ruleType;
 
     /**
@@ -62,16 +75,24 @@ class FilteringHandler extends DefaultHandler {
             OutputStream outputStream = new FileOutputStream((filePathOut), true);
             XMLStreamWriter out = XMLOutputFactory.newInstance().createXMLStreamWriter(
                     new OutputStreamWriter(outputStream, "UTF-8"));
-            HashMap<String, Rule> dataRule = this.getDataRule();
-
+//            SortedMap<String, Rule> dataRule = this.getDataRule();
+            ArrayList<Rule> rules = this.getList();
+            String name = this.getName();
             out.writeStartDocument("UTF-8", "1.0");
             out.writeStartElement("rules");
 
-            for (String s : dataRule.keySet()) {
+            /*for (String s : dataRule.keySet()) {
                 out.writeStartElement("rule");
                 out.writeAttribute("name", s);
                 out.writeAttribute("type", dataRule.get(s).getRuleType().toString().toLowerCase());
                 out.writeAttribute("weight", String.valueOf(dataRule.get(s).getWeight()));
+                out.writeEndElement();
+            }*/
+            for (Rule rule : rules) {
+                out.writeStartElement("rule");
+                out.writeAttribute("name", name);
+                out.writeAttribute("type", rule.getRuleType().toString().toLowerCase());
+                out.writeAttribute("weight", String.valueOf(rule.getWeight()));
                 out.writeEndElement();
             }
 
@@ -94,8 +115,17 @@ class FilteringHandler extends DefaultHandler {
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
+            name = attributes.getValue("name"); // TODO: записывает везде одинаковое имя - b
+            ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
+            list.add(new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
+        }
+    }
+
+    /*@Override
+    public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if (qName.equals("rule")) {
             ruleType = RuleType.valueOf(attributes.getValue("type").toUpperCase());
             dataRule.put(attributes.getValue("name"), new Rule(ruleType, Integer.parseInt(attributes.getValue("weight"))));
         }
-    }
+    }*/
 }
