@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules>
     <rule name="b" type="child" weight="17"></rule>
-    <rule name="b" type="root" weight="29"></rule>
     <rule name="b" type="sub" weight="56"></rule>
-    <rule name="b" type="child" weight="99"></rule>
     <rule name="b" type="sub" weight="12"></rule>
-    <rule name="b" type="sub" weight="99"></rule>
     <rule name="b" type="root" weight="99"></rule>
-    <rule name="b" type="child" weight="34"></rule>
     <rule name="b" type="root" weight="45"></rule>
-    <rule name="b" type="sub" weight="34"></rule>
 </rules>

@@ -88,12 +88,15 @@ class FilteringHandler extends DefaultHandler {
                 out.writeAttribute("weight", String.valueOf(dataRule.get(s).getWeight()));
                 out.writeEndElement();
             }*/
-            for (Rule rule : rules) {
+
+            for (int i = 0; i < rules.size(); i++) {
+                if (i % 2 == 0) {
                 out.writeStartElement("rule");
                 out.writeAttribute("name", name);
-                out.writeAttribute("type", rule.getRuleType().toString().toLowerCase());
-                out.writeAttribute("weight", String.valueOf(rule.getWeight()));
+                out.writeAttribute("type", rules.get(i).getRuleType().toString().toLowerCase());
+                out.writeAttribute("weight", String.valueOf(rules.get(i).getWeight()));
                 out.writeEndElement();
+                }
             }
 
             out.writeEndElement();
