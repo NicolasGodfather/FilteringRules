@@ -21,6 +21,10 @@ class FilteringHandler extends DefaultHandler {
     private OutputStream outputStream;
     private String filePathOut;
 
+    /**
+     *
+     * @param filePathOut - We will
+     */
     public FilteringHandler (String filePathOut) {
         this.filePathOut = filePathOut;
     }
@@ -31,9 +35,16 @@ class FilteringHandler extends DefaultHandler {
             outputStream = new FileOutputStream(filePathOut, true);
             out = XMLOutputFactory.newInstance().createXMLStreamWriter(
                     new OutputStreamWriter(outputStream, "UTF-8"));
+
             out.writeStartDocument("UTF-8", "1.0");
+            out.writeCharacters("\n");
+
             out.writeDTD("<?xml-stylesheet type=\"text/xsl\" href=\"transform.xsl\"?>");
+            out.writeCharacters("\n");
+
             out.writeStartElement("rules");
+            out.writeCharacters("\n");
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
@@ -57,6 +68,7 @@ class FilteringHandler extends DefaultHandler {
                 out.writeAttribute("type", rule.getRuleType().toString().toLowerCase());
                 out.writeAttribute("weight", String.valueOf(rule.getWeight()));
                 out.writeEndElement();
+                out.writeCharacters("\n");
             } catch (XMLStreamException e) {
                 e.printStackTrace();
             }

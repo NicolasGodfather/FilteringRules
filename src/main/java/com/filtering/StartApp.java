@@ -19,6 +19,8 @@ public class StartApp {
             if (args.length == 0) {
                 throw new ArrayIndexOutOfBoundsException("Please, select full path to your XML file in argument.");
             }
+//            String line = "E:\\JAVA\\TECHTASK\\FilteringRules\\src\\main\\resources\\input.xml E:\\JAVA\\TECHTASK\\FilteringRules\\src\\main\\resources\\output.xml";
+//            args = line.split(" "); // or this
             FilteringHandler handler = new FilteringHandler(args[1]); //E:\JAVA\TECHTASK\FilteringRules\src\main\resources\output.xml
             SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
             SAXParser saxParser = saxParserFactory.newSAXParser();
