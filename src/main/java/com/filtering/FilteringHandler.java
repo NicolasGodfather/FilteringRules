@@ -9,6 +9,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.*;
+import java.util.TreeMap;
 
 /**
  * Realization filtering
@@ -17,17 +18,11 @@ import java.io.*;
  * @author Nicolas Asinovich.
  */
 class FilteringHandler extends DefaultHandler {
-
     private XMLStreamWriter out;
     private OutputStream outputStream;
     private String filePathOut;
+    private TreeMap<String, Rule> dataRule = new TreeMap<>();
 
-    private static int count = 0;
-
-    /**
-     * Constructor.
-     * @param filePathOut
-     */
     public FilteringHandler (String filePathOut) {
         this.filePathOut = filePathOut;
     }
@@ -40,7 +35,7 @@ class FilteringHandler extends DefaultHandler {
 
             out.writeStartDocument("UTF-8", "1.0");
             out.writeCharacters("\n");
-
+            // here line will be convert output-file
             out.writeDTD("<?xml-stylesheet type=\"text/xsl\" href=\"transform.xsl\"?>");
             out.writeCharacters("\n");
 
@@ -57,21 +52,34 @@ class FilteringHandler extends DefaultHandler {
     @Override
     public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals("rule")) {
-            count++;
             String name = attributes.getValue("name");
-            Rule rule = new Rule(RuleType.valueOf(attributes.getValue("type").toUpperCase()),
-                    Integer.parseInt(attributes.getValue("weight")));
-            if (count % 2 == 0) {
+            Rule ruleName = dataRule.get(attributes.getValue("name"));
+            RuleType type = RuleType.valueOf(attributes.getValue("type").toUpperCase());
+            int weight = Integer.parseInt(attributes.getValue("weight"));
+
+            if (!dataRule.containsKey(attributes.getValue("name"))) {
+                dataRule.put(name, new Rule(type, weight));
+            } else {
+            /* If elements have some types, we will compare them by weight. */
+                if (type.getRuleTypePrecedence() == ruleName.getRuleType().getRuleTypePrecedence()) {
+                    if (weight > ruleName.getWeight()) {
+                        ruleName.setWeight(weight);
+                    }
+                }
+                else if (type.getRuleTypePrecedence() < ruleName.getRuleType().getRuleTypePrecedence()){
+            /* If elements have some keys, we will compare them by type. */
+                    ruleName.setRuleType(type);
+                }
+            }
             try {
                 out.writeStartElement("rule");
                 out.writeAttribute("name", name);
-                out.writeAttribute("type", rule.getRuleType().toString().toLowerCase());
-                out.writeAttribute("weight", String.valueOf(rule.getWeight()));
+                out.writeAttribute("type", dataRule.get(name).getRuleType().toString().toLowerCase());
+                out.writeAttribute("weight", String.valueOf(dataRule.get(name).getWeight()));
                 out.writeEndElement();
                 out.writeCharacters("\n");
             } catch (XMLStreamException e) {
                 System.out.println("An error has occurred in XML Stream.");
-            }
             }
         }
     }
@@ -80,7 +88,6 @@ class FilteringHandler extends DefaultHandler {
     public void endDocument () throws SAXException {
         try {
             out.writeEndElement();
-            out.writeEndDocument();
             out.writeEndDocument();
         } catch (XMLStreamException e) {
             System.out.println("An error has occurred in XML Stream.");

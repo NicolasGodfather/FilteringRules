@@ -21,7 +21,9 @@ public class Rule {
     }
 
     public void setRuleType (RuleType ruleType) {
-        this.ruleType = ruleType;
+        if (ruleType.getRuleTypePrecedence() <  this.ruleType.getRuleTypePrecedence()){
+            this.ruleType = ruleType;
+        }
     }
 
     public int getWeight () {
@@ -34,5 +36,24 @@ public class Rule {
         } else {
             throw new IllegalArgumentException("The weight should be a positive integer!");
         }
+    }
+
+    @Override
+    public boolean equals (Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Rule rule = (Rule) o;
+
+        if (weight != rule.weight) return false;
+        return ruleType == rule.ruleType;
+
+    }
+
+    @Override
+    public int hashCode () {
+        int result = ruleType != null ? ruleType.hashCode() : 0;
+        result = 31 * result + weight;
+        return result;
     }
 }
